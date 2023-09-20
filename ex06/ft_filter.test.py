@@ -1,21 +1,19 @@
+import unittest
 from ft_filter import ft_filter
 
-# Tests for ft_filter (adjusted for iterator behavior)
-def test_ft_filter():
-    # Test 1: Filtering out odd numbers
-    numbers = [1, 2, 3, 4, 5]
-    expected_result_1 = [2, 4]
-    assert list(ft_filter(lambda x: x % 2 == 0, numbers)) == expected_result_1
+class TestFtFilter(unittest.TestCase):
 
-    # Test 2: Filtering out empty strings
-    strings = ["apple", "", "banana", "", "cherry"]
-    expected_result_2 = ["apple", "banana", "cherry"]
-    assert list(ft_filter(lambda x: x != "", strings)) == expected_result_2
+    def test_filter_odd_numbers(self):
+        numbers = [1, 2, 3, 4, 5]
+        expected_result = [2, 4]
+        result = list(ft_filter(lambda x: x % 2 == 0, numbers))
+        self.assertEqual(result, expected_result)
 
-    return "All tests passed!"
-
-def main():
-    test_ft_filter()
+    def test_filter_empty_strings(self):
+        strings = ["apple", "", "banana", "", "cherry"]
+        expected_result = ["apple", "banana", "cherry"]
+        result = list(ft_filter(lambda x: x != "", strings))
+        self.assertEqual(result, expected_result)
 
 if __name__ == "__main__":
-    main()
+    unittest.main()

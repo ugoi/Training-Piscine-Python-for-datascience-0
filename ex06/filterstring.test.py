@@ -1,34 +1,38 @@
-import sys
-sys.path.append('../')  # Add the parent directory to the Python path
-from stdout_tester import run_test
-from filterstring import main
+import unittest
+import subprocess
 
-# Modify the sys.argv to simulate command line arguments
-def test_valid_input():
-    sys.argv = ["filterstring.py", "Hello the World", "4"]
-    main()
+class TestFilterString(unittest.TestCase):
 
-def test_empty_output():
-    sys.argv = ["filterstring.py", "Hello the World", "99"]
-    main()
+    def run_script(self, args=None):
+        command = ["python", "filterstring.py"]
+        if args:
+            command.extend(args)
 
-def test_incorrect_order():
-    sys.argv = ["filterstring.py", "3", "Hello the World"]
-    main()
+        result = subprocess.run(command, text=True, capture_output=True, encoding="utf-8")
+        return result.stdout
 
-def test_missing_arguments():
-    sys.argv = ["filterstring.py"]
-    main()
+    def test_valid_input(self):
+        test_args = ["Hello the World", "4"]
+        expected_output = "['Hello', 'World']\n"
+        output = self.run_script(args=test_args)
+        self.assertEqual(output, expected_output)
+
+    def test_empty_output(self):
+        test_args = ["Hello the World", "99"]
+        expected_output = "[]\n"
+        output = self.run_script(args=test_args)
+        self.assertEqual(output, expected_output)
+
+    def test_incorrect_order(self):
+        test_args = ["3", "Hello the World"]
+        expected_output = "AssertionError: the arguments are bad\n"
+        output = self.run_script(args=test_args)
+        self.assertEqual(output, expected_output)
+
+    def test_missing_arguments(self):
+        expected_output = "AssertionError: the arguments are bad\n"
+        output = self.run_script()
+        self.assertEqual(output, expected_output)
 
 if __name__ == "__main__":
-    print("Running test_valid_input...")
-    run_test(test_valid_input, "['Hello', 'World']\n")
-
-    print("\nRunning test_empty_output...")
-    run_test(test_empty_output, "[]\n")
-
-    print("\nRunning test_incorrect_order...")
-    run_test(test_incorrect_order, "AssertionError: the arguments are bad\n")
-
-    print("\nRunning test_missing_arguments...")
-    run_test(test_missing_arguments, "AssertionError: the arguments are bad\n")
+    unittest.main()
